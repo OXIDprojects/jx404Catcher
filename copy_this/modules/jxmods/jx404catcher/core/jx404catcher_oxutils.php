@@ -34,8 +34,8 @@ class jx404catcher_oxutils extends jx404catcher_oxutils_parent
         $sJxId = oxUtilsObject::getInstance()->generateUID();
 
         $oDb = oxDb::getDb();
-        $sSql = "INSERT INTO jx404catches (jxid, jx404url, jxcounts, jxinsert) VALUES ('{$sJxId}', '{$sUrl}', 1, NOW()) "
-                . "ON DUPLICATE KEY UPDATE jxcounts=jxcounts+1, jxtimestamp=NOW() ";
+        $sSql = "INSERT INTO jx404catches (jxid, jx404url, jxcount, jxinsert) VALUES ('{$sJxId}', '{$sUrl}', 1, NOW()) "
+                . "ON DUPLICATE KEY UPDATE jxcount=jxcount+1, jxtimestamp=NOW() ";
         $ret = $oDb->Execute($sSql);
 
 

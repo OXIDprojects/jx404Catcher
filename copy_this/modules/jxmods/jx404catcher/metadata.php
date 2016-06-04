@@ -23,9 +23,11 @@ $aModule = array(
                         'oxutils' => 'jxmods/jx404catcher/core/jx404catcher_oxutils'
                         ),
     'files'        => array(
-                        'jx404catcher_install'   => 'jxmods/jx404catcher/application/controllers/admin/jx404catcher_install.php'
+                        'jx404catcher_list'    	=> 'jxmods/jx404catcher/application/controllers/admin/jx404catcher_list.php',
+                        'jx404catcher_install'  => 'jxmods/jx404catcher/application/controllers/admin/jx404catcher_install.php'
                         ),
    'templates'     => array(
+                        'jx404catcher_list.tpl' => 'jxmods/jx404catcher/application/views/admin/tpl/jx404catcher_list.tpl'
                         ),
    'blocks'        => array(
                         ),
