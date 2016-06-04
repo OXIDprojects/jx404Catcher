@@ -36,7 +36,8 @@ class jx404Catcher_Install
                     . "`JX404URL` varchar(255) $sCollate DEFAULT NULL, "
                     . "`JXCOUNTS` int(11) $sCollate DEFAULT NULL, "
                     . "`JXINSERT` datetime DEFAULT NULL, "
-                    . "`JXTIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                    . "`JXTIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
+                    . "UNIQUE INDEX `JX404URL` (`JX404URL`)"
                 . ") "
                 . "ENGINE=MyISAM DEFAULT " . ($isUtf ? ' CHARSET=utf8' : '');
         
