@@ -43,27 +43,6 @@ class jx404catcher_list extends oxAdminDetails {
             $sWhereShopId = "AND l.oxshopid = {$myConfig->getBaseShopId()} ";
         }*/
         
-        /*$blAdminLog = $myConfig->getConfigParam('blLogChangesInAdmin');
-        $sExcludeThis = $myConfig->getConfigParam( 'sJxAdminLogExcludeThis' );
-        if ( !Empty($sExcludeThis) ) {
-            $sExcludeThis = "AND l.oxsql NOT REGEXP '{$sExcludeThis}' ";
-        }
-        
-        $cReportType = $this->getConfig()->getRequestParameter( 'jxadminlog_reporttype' );
-        if (empty($cReportType))
-            $cReportType = "all";
-
-        if ($cReportType == "regexp")
-            $sFreeRegexp = $this->getConfig()->getRequestParameter( 'jxadminlog_regexp' );
-
-        $cAdminUser = $this->getConfig()->getRequestParameter( 'jxadminlog_adminuser' );
-        if (empty($cAdminUser)) {
-            $cAdminUser = "all";
-            $sWhereUser = "";
-        } else {
-            $sWhereUser = "AND l.oxuserid = '{$cAdminUser}' ";
-        }*/
-
         $oDb = oxDb::getDb( oxDB::FETCH_MODE_ASSOC );
 
         $sSql = "SELECT c.jxid, c.jx404url, c.jxcount, c.jxinsert, c.jxtimestamp, s.oxstdurl "
@@ -87,6 +66,8 @@ class jx404catcher_list extends oxAdminDetails {
         }
         
         $this->_aViewData["a404Urls"] = $a404Urls;
+        
+        $this->_aViewData["sShopUrl"] = $myConfig->getShopURL();
 
         $oModule = oxNew('oxModule');
         $oModule->load('jx404catcher');
