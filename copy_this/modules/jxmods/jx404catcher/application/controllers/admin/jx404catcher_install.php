@@ -31,21 +31,30 @@ class jx404Catcher_Install
         $isUtf = oxRegistry::getConfig()->isUtf(); 
         $sCollate = ($isUtf ? "COLLATE 'utf8_general_ci'" : "");
         
-        $aSql[] = "CREATE TABLE `jx404catches` ("
-                    . "`JXID` char(32) $sCollate DEFAULT NULL, "
-                    . "`JX404URL` varchar(255) $sCollate DEFAULT NULL, "
-                    . "`JXCOUNT` int(11) $sCollate DEFAULT NULL, "
-                    . "`JXINSERT` datetime DEFAULT NULL, "
-                    . "`JXTIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
-                    . "UNIQUE INDEX `JX404URL` (`JX404URL`)"
-                . ") "
-                . "ENGINE=MyISAM DEFAULT " . ($isUtf ? ' CHARSET=utf8' : '');
+        $sLogPath = oxRegistry::get("oxConfig")->getConfigParam("sShopDir") . '/log/';
+        $fh = fopen($sLogPath.'jxmods.log', "a+");
+        
+        $aSql[] = array(
+                    "table"     => "jx404catches",
+                    "statement" => "CREATE TABLE `jx404catches` ("
+                                        . "`JXID` char(32) $sCollate DEFAULT NULL, "
+                                        . "`JX404URL` varchar(255) $sCollate DEFAULT NULL, "
+                                        . "`JXCOUNT` int(11) $sCollate DEFAULT NULL, "
+                                        . "`JXINSERT` datetime DEFAULT NULL, "
+                                        . "`JXTIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
+                                        . "UNIQUE INDEX `JX404URL` (`JX404URL`)"
+                                    . ") "
+                                    . "ENGINE=MyISAM DEFAULT " . ($isUtf ? ' CHARSET=utf8' : '')
+                        );
         
         foreach ($aSql as $sSql) {
             try {
-                $oRs = $oDb->Execute($sSql);
+                if ( !$oDb->getOne( "SHOW TABLES LIKE '{$sSql['table']}'", false, false ) ) {
+                    $oRs = $oDb->Execute($sSql['statement']);
+                }
             }
             catch (Exception $e) {
+                fputs( $fh, date("Y-m-d H:i:s ").$e->getMessage() );
                 echo '<div style="border:2px solid #dd0000;margin:10px;padding:5px;background-color:#ffdddd;font-family:sans-serif;font-size:14px;">';
                 echo '<b>SQL-Error '.$e->getCode().' in SQL statement</b><br />'.$e->getMessage().'';
                 echo '</div>';
@@ -53,6 +62,7 @@ class jx404Catcher_Install
                 die();
             }
         }
+        fclose($fh);
         
         return true; 
     } 
@@ -60,7 +70,7 @@ class jx404Catcher_Install
 
     public static function onDeactivate() 
     { 
-        /* do nothing */
+        /* nothing to do */
         
         return true; 
     }  

@@ -6,16 +6,22 @@ $sMetadataVersion = '1.1';
  
 /**
  * Module information
- */
+ * 
+ * @link      https://github.com/job963/jx404Catcher
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @copyright (C) Joachim Barthel 2012-2016
+ * 
+ **/
+
 $aModule = array(
     'id'           => 'jx404Catcher',
-    'title'        => 'jx404Catcher - Catching and Logging of 404 Calls',
+    'title'        => 'jx404Catcher - Logging and Redirecting of 404 Calls',
     'description'  => array(
-                        'de' => 'Erfassung und Speicherung der 404 Aufrufe.',
-                        'en' => 'Catching and Logging of 404 Calls.',
+                        'de' => 'Erfassung und Weiterleitung von 404 Aufrufen.',
+                        'en' => 'Logging and Redirecting of 404 Calls.',
                         ),
     'thumbnail'    => 'jxadminlog.png',
-    'version'      => '0.1',
+    'version'      => '0.2.0',
     'author'       => 'Joachim Barthel',
     'url'          => 'https://github.com/job963/jx404Catcher',
     'email'        => 'jobarthel@gmail.com',
@@ -36,5 +42,11 @@ $aModule = array(
                         'onDeactivate' => 'jx404catcher_install::onDeactivate'
                         ),
    'settings'      => array(
+                        array(
+                                'group' => 'JX404CATCHER_DISPLAY', 
+                                'name'  => 'sJx404CatcherUrlLength', 
+                                'type'  => 'str', 
+                                'value' => '60'
+                                ),
                         )
 );
