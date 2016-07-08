@@ -1,5 +1,5 @@
 [{include file="headitem.tpl" title="GENERAL_ADMIN_TITLE"|oxmultilangassign}]
-<link href="[{$oViewConf->getModuleUrl('jx404catcher','out/admin/src/jx404catcher.css')}]" type="text/css" rel="stylesheet">
+<link href="[{$oViewConf->getModuleUrl('jx404Catcher','out/admin/src/jx404catcher.css')}]" type="text/css" rel="stylesheet">
 
 [{if $readonly}]
     [{assign var="readonly" value="readonly disabled"}]
@@ -68,7 +68,7 @@
                             <input type="hidden" name="jx404_404urls[]" value="[{$a404Url.jx404url}]">
                         </td>
                         <td class="[{ $listclass }]" style="height: 20px;">
-                            &nbsp;<nobr><a href="[{$sShopUrl}][{$a404Url.oxseourl}]" title="[{$sShopUrl}][{$a404Url.oxsteorl}]" target="_blank"><u>[{*$a404Url.oxseourl|substr:0:$iUrlLength}][{if $a404Url.oxseourl|strlen > $iUrlLength}]...[{/if*}]...</u></a></nobr>
+                            &nbsp;<nobr><a href="[{$sShopUrl}][{$a404Url.oxseourl}]" title="[{$sShopUrl}][{$a404Url.oxsteorl}]" target="_blank"><b>[{*$a404Url.oxseourl|substr:0:$iUrlLength}][{if $a404Url.oxseourl|strlen > $iUrlLength}]...[{/if*}]&nearr;</b></a></nobr>
                             <input id="" name="jx404_seourls[]" size="[{$iUrlLength}]" value="[{ $a404Url.oxseourl }]" class="flatInput">
                         </td>
                         <td class="[{ $listclass }]">[{$a404Url.jxcount}]</td>

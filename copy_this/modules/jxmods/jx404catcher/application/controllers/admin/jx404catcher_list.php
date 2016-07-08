@@ -50,10 +50,11 @@ class jx404catcher_list extends oxAdminDetails {
                 . "LEFT JOIN oxseo s ON (c.jx404url = s.oxseourl) "
                 . "ORDER BY c.jx404url ";*/
         
-        $sSql = "SELECT c.jxid, c.jx404url, c.jxcount, c.jxinsert, c.jxtimestamp, h.oxident, s.oxseourl, s.oxobjectid "
+        $sSql = "SELECT c.jxid, c.jx404url, c.jxcount, c.jxinsert, c.jxtimestamp, h.oxident, h.oxobjectid, "
+                    . "(SELECT s.oxseourl FROM oxseo s WHERE h.oxobjectid = s.oxobjectid LIMIT 1) AS oxseourl "
                 . "FROM jx404catches c "
                 . "LEFT JOIN oxseohistory h ON (MD5(LOWER(c.jx404url)) = h.oxident) "
-                . "LEFT JOIN oxseo s ON h.oxobjectid = s.oxobjectid "
+                //. "LEFT JOIN oxseo s ON h.oxobjectid = s.oxobjectid "
                 . "ORDER BY c.jx404url ";
         
         try {
