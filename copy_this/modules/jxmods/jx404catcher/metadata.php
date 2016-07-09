@@ -9,7 +9,7 @@ $sMetadataVersion = '1.1';
  * 
  * @link      https://github.com/job963/jx404Catcher
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @copyright (C) Joachim Barthel 2012-2016
+ * @copyright (C) Joachim Barthel 2016
  * 
  **/
 
@@ -20,7 +20,7 @@ $aModule = array(
                         'de' => 'Erfassung und Weiterleitung von 404 Aufrufen.',
                         'en' => 'Logging and Redirecting of 404 Calls.',
                         ),
-    'thumbnail'    => 'jxadminlog.png',
+    'thumbnail'    => 'jx404catcher.png',
     'version'      => '0.2.0',
     'author'       => 'Joachim Barthel',
     'url'          => 'https://github.com/job963/jx404Catcher',

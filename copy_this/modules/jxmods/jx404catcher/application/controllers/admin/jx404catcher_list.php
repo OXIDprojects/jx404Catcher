@@ -45,11 +45,6 @@ class jx404catcher_list extends oxAdminDetails {
         
         $oDb = oxDb::getDb( oxDB::FETCH_MODE_ASSOC );
 
-        /*$sSql = "SELECT c.jxid, c.jx404url, c.jxcount, c.jxinsert, c.jxtimestamp, s.oxstdurl "
-                . "FROM jx404catches c "
-                . "LEFT JOIN oxseo s ON (c.jx404url = s.oxseourl) "
-                . "ORDER BY c.jx404url ";*/
-        
         $sSql = "SELECT c.jxid, c.jx404url, c.jxcount, c.jxinsert, c.jxtimestamp, h.oxident, h.oxobjectid, "
                     . "(SELECT s.oxseourl FROM oxseo s WHERE h.oxobjectid = s.oxobjectid LIMIT 1) AS oxseourl "
                 . "FROM jx404catches c "
@@ -101,42 +96,53 @@ class jx404catcher_list extends oxAdminDetails {
         //$aCatIds = $this->getConfig()->getRequestParameter( 'jxtx_catid' ); 
         $a404Urls = $this->getConfig()->getRequestParameter( 'jx404_404urls' ); 
         $aSeoUrls = $this->getConfig()->getRequestParameter( 'jx404_seourls' ); 
+        /*echo '<pre>';
+        print_r($a404Urls);
+        echo '</pre><hr>';
+        echo '<pre>';
+        print_r($aSeoUrls);
+        echo '</pre>';*/
 
         foreach ($aSeoUrls as $key => $sSeoUrl) {
-            //$sSql = "UPDATE oxcategories SET jxamazoncategory = '{$aTaxoVals[$key]}' WHERE oxid = '{$aCatIds[$key]}' ";
-            $sSql = "SELECT oxobjectid "
-                    . "FROM oxseo "
-                    . "WHERE oxseourl = '{$sSeoUrl}' "
-                        . "AND oxlang = {$iLang} "
-                        . "AND oxshopid = {$sShopId} "
-                    . "LIMIT 1";
-            $sObjectId = $oDb->getOne($sSql);
-            //echo '<hr>' . $sSeoUrl . '-' .$sObjectId . '<br>';
-            //echo $oDb->getOne("SELECT oxobjectid FROM oxseohistory WHERE oxobjectid = " . $oDb->quote($sObjectId) . " AND oxshopid = {$sShopId} AND oxlang = {$iLang} ");
-            //echo '<br>';
-            if ($sObjectId != '') {
-                if ($oDb->getOne("SELECT oxobjectid FROM oxseohistory WHERE oxobjectid = " . $oDb->quote($sObjectId) . " AND oxshopid = {$sShopId} AND oxlang = {$iLang} ") == '') {
-                    //echo 'not found<br><br>';
-                    $sSql = "INSERT INTO oxseohistory "
-                            . "(oxobjectid, oxident, oxshopid, oxlang, oxhits, oxinsert) "
-                            . "VALUES "
-                            . "('{$sObjectId}', MD5(LOWER('{$a404Urls[$key]}')), {$sShopId}, {$iLang}, 0, NOW())";
-                    //echo $sSql;
-                    if ($sSeoUrl != '') {
+            if ($sSeoUrl != '') {
+                $sSql = "SELECT oxobjectid "
+                        . "FROM oxseo "
+                        . "WHERE oxseourl = '{$sSeoUrl}' "
+                            . "AND oxlang = {$iLang} "
+                            . "AND oxshopid = {$sShopId} "
+                        . "LIMIT 1";
+                $sObjectId = $oDb->getOne($sSql);
+                //echo '<hr>' . $sSeoUrl . '-' .$sObjectId . '<br>';
+                //echo $oDb->getOne("SELECT oxobjectid FROM oxseohistory WHERE oxobjectid = " . $oDb->quote($sObjectId) . " AND oxshopid = {$sShopId} AND oxlang = {$iLang} ");
+                //echo "{$sSql}<br>";
+                if ($sObjectId != '') {
+                    if ($oDb->getOne("SELECT oxobjectid FROM oxseohistory WHERE oxident = MD5(LOWER('{$a404Urls[$key]}')) AND oxshopid = {$sShopId} AND oxlang = {$iLang} ") == '') {
+                        //echo "INSERT: {$a404Urls[$key]} -&gt; {$sSeoUrl}<br>";
+                        $sSql = "INSERT INTO oxseohistory "
+                                . "(oxobjectid, oxident, oxshopid, oxlang, oxhits, oxinsert) "
+                                . "VALUES "
+                                . "('{$sObjectId}', MD5(LOWER('{$a404Urls[$key]}')), {$sShopId}, {$iLang}, 0, NOW())";
+                        //echo $sSql;
+                        $oDb->execute($sSql);
+                    }
+                    else {
+                        //echo "UPDATE: {$a404Urls[$key]} -&gt; {$sSeoUrl}<br>";
+                        /*$sSql = "UPDATE oxseohistory "
+                                . "SET oxident = MD5(LOWER('{$a404Urls[$key]}')) "
+                                . "WHERE oxobjectid = " . $oDb->quote($sObjectId) . " "
+                                    . "AND oxshopid = {$sShopId} "
+                                    . "AND oxlang = {$iLang} ";*/
+                        $sSql = "UPDATE oxseohistory "
+                                . "SET oxobjectid = " . $oDb->quote($sObjectId) . " "
+                                . "WHERE oxident = MD5(LOWER('{$a404Urls[$key]}')) "
+                                    . "AND oxshopid = {$sShopId} "
+                                    . "AND oxlang = {$iLang} ";
+                        //echo $sSql;
                         $oDb->execute($sSql);
                     }
                 }
                 else {
-                    //echo 'found<br><br>';
-                    $sSql = "UPDATE oxseohistory "
-                            . "SET oxident = MD5(LOWER('{$a404Urls[$key]}')) "
-                            . "WHERE oxobjectid = " . $oDb->quote($sObjectId) . " "
-                                . "AND oxshopid = {$sShopId} "
-                                . "AND oxlang = {$iLang} ";
-                    //echo $sSql;
-                    if ($sSeoUrl != '') {
-                        $oDb->execute($sSql);
-                    }
+                    echo "URL '{$sSeoUrl}' not found.<br>";
                 }
             }
             
@@ -145,5 +151,17 @@ class jx404catcher_list extends oxAdminDetails {
     }
 
 	
-		
+    public function RemoveUrl() 
+    {
+        $sOxIdent = $this->getConfig()->getRequestParameter( 'oxident' ); 
+        //echo $sOxIdent;
+        
+        $oDb = oxDb::getDb();
+        $sSql = "DELETE FROM oxseohistory WHERE oxident = '{$sOxIdent}' ";
+        //echo $sSql;
+        $oDb->execute($sSql);
+        
+        return;
+    }
+    
 }

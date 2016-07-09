@@ -1,6 +1,6 @@
-# jx404Catcher - OXID Module for Catching 404 Calls
+# jx404Catcher - OXID Module for Catching and Redirecting 404 Calls
 
-*Module for OXID eShops for catching and logging calls to non existent pages (error 404)*
+*Module for OXID eShops for Logging and Redirectimg calls to non existent pages (error 404)*
 
 ## Installation and Setup
 1. Copy all folders and files under **copy\_this** to the root folder of your shop.
@@ -9,36 +9,18 @@
 
 ## Screenshot
 
-**Display of jobs in Admin**
+**Display of 404 and 310 URLs in Admin**
 
-![Job list](https://github.com/job963/jxArtUp/raw/master/docs/img/jxartup_main.png)
+![404 Urls](https://github.com/job963/jx404Catcher/raw/master/docs/jx404catcher.png)
 
-![Calendar](https://github.com/job963/jxArtUp/raw/master/docs/img/jxartup_calendar.png)
 
-**Editing a job**
+## How to Use
 
-![Editing a job](https://github.com/job963/jxArtUp/raw/master/docs/img/jxartup_edit.png)
+Please notice:
+The 404 errors of the past can't be shown, because logging of 404 calls is running not until the module is activated.
 
-## Changelog
+1. Navigate to Shop Setting and click on 404 Calls.
 
-* **0.1 Initial Release**
-  * Create, edit and remove update jobs
-  * Update job for CRON
+2. Now you will see all 404 calls to your shop since the module was actived.
 
-* **0.2 Calendar Display**
-  * Search for product number added
-  * calendar display added
-  * wrong texts for column headers fixed
-
-*  **0.2.1 Bugfix**
-  * Settings for default display added
-  * Autofocus of fields fixed
-
-*  **0.2.2 Bugfix**  
-  * Problems on Firefox fixed
-  * Support for empty fields added   
-
-*  **0.2.3 Bugfix**  
-  * Problems on cron job fixed
-  * Missing field in create job added
-   
+3. For setting a redirect URL enter into the middle column the new URL. The must not contain the protocol and domain (without http(s):// and www.myshop.com/) and the URL must exist as seo URL. To ensure this, open the new URL once in the frontend of the shop.
