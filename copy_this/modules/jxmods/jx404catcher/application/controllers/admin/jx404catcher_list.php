@@ -27,7 +27,7 @@ class jx404catcher_list extends oxAdminDetails {
     protected $_sThisTemplate = "jx404catcher_list.tpl";
 
     /**
-     * Displays the latest admin log entries as full report
+     * Displays the 404 entries as full report
      */
     public function render() 
     {
@@ -46,10 +46,9 @@ class jx404catcher_list extends oxAdminDetails {
         $oDb = oxDb::getDb( oxDB::FETCH_MODE_ASSOC );
 
         $sSql = "SELECT c.jxid, c.jx404url, c.jxcount, c.jxinsert, c.jxtimestamp, h.oxident, h.oxobjectid, "
-                    . "(SELECT s.oxseourl FROM oxseo s WHERE h.oxobjectid = s.oxobjectid LIMIT 1) AS oxseourl "
+                    . "(SELECT s.oxseourl FROM oxseo s WHERE h.oxobjectid = s.oxobjectid ORDER BY s.oxtimestamp LIMIT 1) AS oxseourl "
                 . "FROM jx404catches c "
                 . "LEFT JOIN oxseohistory h ON (MD5(LOWER(c.jx404url)) = h.oxident) "
-                //. "LEFT JOIN oxseo s ON h.oxobjectid = s.oxobjectid "
                 . "ORDER BY c.jx404url ";
         
         try {
@@ -93,15 +92,8 @@ class jx404catcher_list extends oxAdminDetails {
         $iLang = $this->_iEditLang;
 
         $oDb = oxDb::getDb();
-        //$aCatIds = $this->getConfig()->getRequestParameter( 'jxtx_catid' ); 
         $a404Urls = $this->getConfig()->getRequestParameter( 'jx404_404urls' ); 
         $aSeoUrls = $this->getConfig()->getRequestParameter( 'jx404_seourls' ); 
-        /*echo '<pre>';
-        print_r($a404Urls);
-        echo '</pre><hr>';
-        echo '<pre>';
-        print_r($aSeoUrls);
-        echo '</pre>';*/
 
         foreach ($aSeoUrls as $key => $sSeoUrl) {
             if ($sSeoUrl != '') {
@@ -112,32 +104,21 @@ class jx404catcher_list extends oxAdminDetails {
                             . "AND oxshopid = {$sShopId} "
                         . "LIMIT 1";
                 $sObjectId = $oDb->getOne($sSql);
-                //echo '<hr>' . $sSeoUrl . '-' .$sObjectId . '<br>';
-                //echo $oDb->getOne("SELECT oxobjectid FROM oxseohistory WHERE oxobjectid = " . $oDb->quote($sObjectId) . " AND oxshopid = {$sShopId} AND oxlang = {$iLang} ");
-                //echo "{$sSql}<br>";
+
                 if ($sObjectId != '') {
                     if ($oDb->getOne("SELECT oxobjectid FROM oxseohistory WHERE oxident = MD5(LOWER('{$a404Urls[$key]}')) AND oxshopid = {$sShopId} AND oxlang = {$iLang} ") == '') {
-                        //echo "INSERT: {$a404Urls[$key]} -&gt; {$sSeoUrl}<br>";
                         $sSql = "INSERT INTO oxseohistory "
                                 . "(oxobjectid, oxident, oxshopid, oxlang, oxhits, oxinsert) "
                                 . "VALUES "
                                 . "('{$sObjectId}', MD5(LOWER('{$a404Urls[$key]}')), {$sShopId}, {$iLang}, 0, NOW())";
-                        //echo $sSql;
                         $oDb->execute($sSql);
                     }
                     else {
-                        //echo "UPDATE: {$a404Urls[$key]} -&gt; {$sSeoUrl}<br>";
-                        /*$sSql = "UPDATE oxseohistory "
-                                . "SET oxident = MD5(LOWER('{$a404Urls[$key]}')) "
-                                . "WHERE oxobjectid = " . $oDb->quote($sObjectId) . " "
-                                    . "AND oxshopid = {$sShopId} "
-                                    . "AND oxlang = {$iLang} ";*/
                         $sSql = "UPDATE oxseohistory "
                                 . "SET oxobjectid = " . $oDb->quote($sObjectId) . " "
                                 . "WHERE oxident = MD5(LOWER('{$a404Urls[$key]}')) "
                                     . "AND oxshopid = {$sShopId} "
                                     . "AND oxlang = {$iLang} ";
-                        //echo $sSql;
                         $oDb->execute($sSql);
                     }
                 }
@@ -154,11 +135,10 @@ class jx404catcher_list extends oxAdminDetails {
     public function RemoveUrl() 
     {
         $sOxIdent = $this->getConfig()->getRequestParameter( 'oxident' ); 
-        //echo $sOxIdent;
         
         $oDb = oxDb::getDb();
         $sSql = "DELETE FROM oxseohistory WHERE oxident = '{$sOxIdent}' ";
-        //echo $sSql;
+
         $oDb->execute($sSql);
         
         return;

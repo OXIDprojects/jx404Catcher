@@ -21,7 +21,7 @@ $aModule = array(
                         'en' => 'Logging and Redirecting of 404 Calls.',
                         ),
     'thumbnail'    => 'jx404catcher.png',
-    'version'      => '0.2.0',
+    'version'      => '0.2.1',
     'author'       => 'Joachim Barthel',
     'url'          => 'https://github.com/job963/jx404Catcher',
     'email'        => 'jobarthel@gmail.com',
